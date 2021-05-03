@@ -1,2 +1,1 @@
-# spring-boot-app
-This is demo spring boot application
+# spring-boot-application
