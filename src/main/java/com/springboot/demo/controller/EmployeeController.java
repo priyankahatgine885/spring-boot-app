@@ -1,6 +1,10 @@
 package com.springboot.demo.controller;
+import com.springboot.demo.dto.employee.EmployeeDTO;
+import com.springboot.demo.dto.employee.EmployeeListResponse;
+import com.springboot.demo.dto.employee.EmployeeResponse;
 import com.springboot.demo.entities.Employee;
 import com.springboot.demo.exception.RecordNotFoundException;
+import com.springboot.demo.dto.BaseResponse;
 import com.springboot.demo.service.EmployeeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,22 +12,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping
 @Tag(name = "Employee", description = "API for Employee")
-
-
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
 
     @GetMapping("/employee")
-    public List<Employee> getEmployees() {
-        return this.employeeService.getEmployees();
+    public ResponseEntity<EmployeeListResponse> getEmployees() {
+        EmployeeListResponse empList = this.employeeService.getEmployees();
+        HttpStatus statusCode = empList.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(  empList, statusCode);
     }
+
     @GetMapping("/employee/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable int id) throws RecordNotFoundException {
         if((id <= 0)){
@@ -33,13 +36,15 @@ public class EmployeeController {
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
     @PostMapping("/employee")
-    public ResponseEntity<Employee> addEmployees(@RequestBody com.springboot.demo.entities.Employee employee){
-        try{
-            this.employeeService.addEmployee(employee);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }catch (Exception ex) {
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<EmployeeResponse> addEmployees(@RequestBody EmployeeDTO employee){
+        try {
+            EmployeeResponse emp = this.employeeService.addEmployee(employee);
+            emp.setMessage("Employee created successfully");
+            final HttpStatus statusCode =  emp.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+            return new ResponseEntity<>(emp, statusCode);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+       }
     }
 
     @PutMapping("/employee/{id}")

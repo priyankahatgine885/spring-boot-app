@@ -1,15 +1,18 @@
 package com.springboot.demo.service.impl;
 
 import com.springboot.demo.dao.EmployeeDao;
+import com.springboot.demo.dto.employee.EmployeeDTO;
+import com.springboot.demo.dto.employee.EmployeeListResponse;
+import com.springboot.demo.dto.employee.EmployeeResponse;
 import com.springboot.demo.entities.Employee;
 import com.springboot.demo.exception.NameAlreadyExistException;
+import com.springboot.demo.dto.BaseResponse;
 import com.springboot.demo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -17,8 +20,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeDao employeeDao;
 
     @Override
-    public List<Employee> getEmployees() {
-        return employeeDao.findAll();
+    public EmployeeListResponse getEmployees() {
+        List<Employee> employeeList = employeeDao.findAll();
+        return new EmployeeListResponse(employeeList, employeeList.size()) ;
     }
 
     @Override
@@ -27,11 +31,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee addEmployee(@RequestBody Employee employee){
+    public EmployeeResponse addEmployee(@RequestBody EmployeeDTO employee){
         if(employeeDao.findEmployeeByName(employee.getName()) != null){
             throw new NameAlreadyExistException("Employee Name already exist");
         }else{
-            return employeeDao.save(employee);
+//            Employee emp = new Employee(employee);
+//            Employee e = employeeDao.save(emp);
+            return  new EmployeeResponse(employeeDao.save(new Employee(employee)));
         }
     }
 

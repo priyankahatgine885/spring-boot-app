@@ -1,9 +1,7 @@
 package com.springboot.demo.entities;
 
-import com.sun.istack.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.springboot.demo.dto.employee.EmployeeDTO;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -14,6 +12,8 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class Employee  implements Serializable {
 
     @Id
@@ -28,4 +28,8 @@ public class Employee  implements Serializable {
     @Column(name = "salary")
     private float salary;
 
+    public Employee(EmployeeDTO e){
+        this.setName(e.getName());
+        this.setSalary(e.getSalary());
+    }
 }
