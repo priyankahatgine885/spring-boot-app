@@ -2,24 +2,12 @@
  * Copyright (C) 2021
  ******************************************************************************/
 package com.springboot.demo.config;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.StringVendorExtension;
-import springfox.documentation.service.VendorExtension;
-import springfox.documentation.spring.web.plugins.Docket;
-
-
 /**
  * Swagger configuration.
  *
@@ -27,7 +15,6 @@ import springfox.documentation.spring.web.plugins.Docket;
  */
 @Configuration
 public class SwaggerConfiguration {
-
     @Bean
     public OpenAPI springShopOpenAPI() {
         return new OpenAPI()

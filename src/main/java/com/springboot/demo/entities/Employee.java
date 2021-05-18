@@ -1,8 +1,6 @@
 package com.springboot.demo.entities;
-
 import com.springboot.demo.dto.employee.EmployeeDTO;
 import lombok.*;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -15,7 +13,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Employee  implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

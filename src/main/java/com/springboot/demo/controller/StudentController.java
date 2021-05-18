@@ -1,5 +1,7 @@
 package com.springboot.demo.controller;
-
+import com.springboot.demo.dto.student.StudentDTO;
+import com.springboot.demo.dto.student.StudentListResponse;
+import com.springboot.demo.dto.student.StudentResponse;
 import com.springboot.demo.entities.Student;
 import com.springboot.demo.exception.RecordNotFoundException;
 import com.springboot.demo.service.StudentService;
@@ -8,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping()
@@ -18,14 +19,15 @@ public class StudentController {
     private StudentService studentService;
 
     @GetMapping("/student")
-    public List<Student> getStudent() {
-
-        return this.studentService.getStudents();
+    public ResponseEntity<StudentListResponse> getStudents() {
+        StudentListResponse studentListResponse = this.studentService.getStudents();
+        HttpStatus statusCode = studentListResponse.getSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(studentListResponse, statusCode);
     }
 
     @GetMapping("/student/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable int id) throws RecordNotFoundException {
-        if((id <= 0)){
+        if ((id <= 0)) {
             throw new RecordNotFoundException("Invalid student id : " + id);
         }
         Student student = studentService.getStudentById(id);
@@ -33,33 +35,31 @@ public class StudentController {
     }
 
     @PostMapping("/student")
-    public ResponseEntity<Student> addStudents(@RequestBody Student student){
-        try{
-            this.studentService.addStudents(student);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<StudentResponse> addStudent(@RequestBody StudentDTO student) {
+        StudentResponse studentResponse = this.studentService.addStudent(student);
+        studentResponse.setMessage("Student created successfully");
+        final HttpStatus statusCode = studentResponse.getSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(studentResponse, statusCode);
     }
 
     @PutMapping("/student/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable int id, @RequestBody Student student){
-        try{
-            this.studentService.updateStudents(id, student);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }catch (Exception ex){
+    public ResponseEntity<StudentResponse> updateStudent(@PathVariable int id, @RequestBody Student student) {
+        try {
+            StudentResponse studentResponse = this.studentService.updateStudent(id, student);
+            studentResponse.setMessage("Student updated successfully");
+            final HttpStatus statusCode = studentResponse.getSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+            return new ResponseEntity<>(studentResponse, statusCode);
+        } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/student/{id}")
-    public ResponseEntity<HttpStatus> deleteStudent(@PathVariable int id){
-        try{
-            this.studentService.deleteStudents(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<StudentResponse> deleteStudent(@PathVariable int id) {
+        this.studentService.deleteStudent(id);
+        StudentResponse studentResponse = new StudentResponse(true);
+        studentResponse.setMessage("Student deleted successfully");
+        final HttpStatus statusCode = studentResponse.getSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(studentResponse, statusCode);
     }
-
 }

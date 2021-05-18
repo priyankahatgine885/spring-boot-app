@@ -1,11 +1,12 @@
-package com.springboot.demo.dto.employee;
+package com.springboot.demo.dto.student;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class EmployeeDTO {
+public class StudentDTO {
     private int id;
     private String name;
-    private float salary;
+    private String city;
 }
+
