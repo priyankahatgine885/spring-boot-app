@@ -1,5 +1,6 @@
 package com.springboot.demo.test;
 import com.springboot.demo.controller.EmployeeController;
+import com.springboot.demo.dao.EmployeeDao;
 import com.springboot.demo.dto.employee.EmployeeDTO;
 import com.springboot.demo.dto.employee.EmployeeListResponse;
 import com.springboot.demo.dto.employee.EmployeeResponse;
@@ -18,10 +19,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class EmployeeControllerTest {
     @Autowired
     private EmployeeController employeeController;
+    @Autowired
+    private EmployeeDao employeeDao;
     @Test
     public void testCreateEmployee() {
         EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setName("Sachin Patil");
+        employeeDTO.setName("Sachin Patil111111");
         employeeDTO.setSalary(25000.0f);
         ResponseEntity<EmployeeResponse> response = employeeController.addEmployee(employeeDTO);
         Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
@@ -31,9 +34,11 @@ public class EmployeeControllerTest {
     @Test
     public void testDuplicateEmployeeNameNotAllowed() {
         EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setName("Amit Patil");
+        employeeDTO.setName("Amit Patil1111");
         employeeDTO.setSalary(2222);
         ResponseEntity<EmployeeResponse> response = employeeController.addEmployee(employeeDTO);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assert.assertEquals(response.getBody().getSuccess(), true);
 
     }
     @Test
@@ -55,7 +60,8 @@ public class EmployeeControllerTest {
     }
     @Test
     public void testDeleteEmployee(){
-       ResponseEntity<EmployeeResponse> response = employeeController.deleteEmployee(16);
+        Employee employee = employeeDao.findEmployeeByName("GOmtesh444");
+        ResponseEntity<EmployeeResponse> response = employeeController.deleteEmployee(employee.getId());
         Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Assert.assertEquals(response.getBody().getSuccess(), true);
     }
