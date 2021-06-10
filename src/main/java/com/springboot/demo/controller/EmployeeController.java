@@ -21,7 +21,7 @@ public class EmployeeController {
     @GetMapping("/employee")
     public ResponseEntity<EmployeeListResponse> getEmployees() {
         EmployeeListResponse empList = this.employeeService.getEmployees();
-        HttpStatus statusCode = empList.getSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+        HttpStatus statusCode = empList.getSuccess() ? HttpStatus.OK : HttpStatus.NO_CONTENT;
         return new ResponseEntity<>(empList, statusCode);
     }
 

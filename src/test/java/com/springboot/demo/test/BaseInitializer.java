@@ -12,12 +12,12 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Testcontainers
+
 public class BaseInitializer {
     @Container
     public static MySQLContainer container = new MySQLContainer("mysql:8.0")
             .withDatabaseName("test_container_db")
             .withPassword("priyanka")
-            //.withInitScript("container/INIT.sql")
             .withUsername("priyanka");
 
     static {
