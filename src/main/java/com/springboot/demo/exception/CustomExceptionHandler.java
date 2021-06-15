@@ -29,4 +29,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         response.setMessage(ex.getMessage());
         return new ResponseEntity(response, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(EmptyListException.class)
+    public final ResponseEntity<Student> handleStudentEmptyListException(EmptyListException ex, WebRequest request) {
+        ErrorResponse response = new ErrorResponse();
+        response.setMessage(ex.getMessage());
+        return new ResponseEntity(response, HttpStatus.NO_CONTENT);
+    }
 }

@@ -4,6 +4,7 @@ import com.springboot.demo.dto.employee.EmployeeDTO;
 import com.springboot.demo.dto.employee.EmployeeListResponse;
 import com.springboot.demo.dto.employee.EmployeeResponse;
 import com.springboot.demo.entities.Employee;
+import com.springboot.demo.exception.EmptyListException;
 import com.springboot.demo.exception.NameAlreadyExistException;
 import com.springboot.demo.exception.ResourceNotFoundException;
 import com.springboot.demo.service.EmployeeService;
@@ -48,9 +49,13 @@ public class EmployeeServiceTest extends BaseInitializer {
     }
 
     @Test
-    public void getListEmployees_success() throws Exception {
+    public void getListEmployees_getListEmployees_emptyListException(){
         EmployeeListResponse response = employeeService.getEmployees();
-        Assert.assertNotNull(response);
+        if(response.getSize() != 0) {
+            Assert.assertNotNull(response);
+        }else {
+            throw new EmptyListException("List is empty");
+        }
     }
 
     @Test
